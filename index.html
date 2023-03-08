@@ -9,7 +9,7 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
-  <!-- Favicons -->     
+  <!-- Favicons -->
   <link href="assets/img/favicon.ico" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
@@ -129,7 +129,7 @@
         <div class="col-lg-6"></div>
       </div>
     </div>
-    
+
     <!-- ======= Counts Section ======= -->
     <section id="counts" class="counts">
       <div class="container">
@@ -355,24 +355,24 @@
   <script>
     let slideIndex = 0;
     showSlides();
-    
+
     function showSlides() {
       let i;
       let slides = document.getElementsById("hero");
       //let dots = document.getElementsByClassName("dot");
       for (i = 0; i < 3; i++) {
-        slides[i].style.background = ' ';  
+        slides[i].style.background = ' ';
       }
       slideIndex++;
-      if (slideIndex > slides.length) {slideIndex = 1}    
+      if (slideIndex > slides.length) { slideIndex = 1 }
       /*for (i = 0; i < dots.length; i++) {
         dots[i].className = dots[i].className.replace(" active", "");
       }*/
-      slides[slideIndex-1].style.backgroundImage = "url(''../../img/hero-bg.jpg')";  
+      slides[slideIndex - 1].style.backgroundImage = "url(''../../img/hero-bg.jpg')";
       //dots[slideIndex-1].className += " active";
       setTimeout(showSlides, 2000); // Change image every 2 seconds
     }
-    </script>
+  </script>
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>

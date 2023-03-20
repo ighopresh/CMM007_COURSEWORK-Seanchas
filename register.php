@@ -7,7 +7,7 @@
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-   <title>Register</title>
+   <title>Seanchas - Register</title>
 
 
    <!-- Font Awesome icons (free version)-->
@@ -37,7 +37,7 @@
             data: 'email=' + $("#email").val(),
             type: "POST",
             success: function (data) {
-               $("#user-availability-status").html(data);
+               $("#user-availability-status").php(data);
                $("#loaderIcon").hide();
             },
             error: function () {
@@ -233,7 +233,7 @@
          let pw1 = document.getElementById("pswd1").value;
          let pw2 = document.getElementById("pswd2").value;
          if (fname !== "" && lname !== "" && emailAdd !== "" && pw1 !== "" && pw2 !== "") {
-         alert("Congratulations, you've Registered successfully!!!");
+         alert("Congratulations, you've Registered successfully!!! \n Please wait for Admin Approval.");
          return true;
          } else {
          document.getElementById('submit').disabled = true;
@@ -253,7 +253,7 @@
 
 </head>
 
-<body style="background-image: url('assets/img/signup.jpg');">
+<body style="background-image: url('assets/img/bg-00.jpeg');">
    <div class="container">
       <div class="row justify-content-center">
          <div class="col-xl-6 col-lg-8 col-md-8">
@@ -265,7 +265,7 @@
                            <div class="text-center">
                               <h1 class="h4 text-gray-900 mb-3">Sign Up</h1>
                            </div>
-                           <form class="user" method="POST" name="signup" onsubmit="return validate();" novalidate>
+                           <form action="process-signup.php" class="user" method="POST" name="signup" onsubmit="return validate();" novalidate>
                               <div class="form-group row">
                                  <div class="col-sm-6 mb-3 mb-sm-0">
                                     <input class="form-control form-control-user" type="text" id="fname" name="fname"
@@ -304,10 +304,10 @@
                               <hr>
                            </form>
                            <div class="text-center">
-                              <a href="index.html" class="btn btn-primary btn-block text-white btn-user">Home</a>
+                              <a href="index.php" class="btn btn-primary btn-block text-white btn-user">Home</a>
                               <hr>
                            </div>
-                           <div class="text-center"><a href="login.html"
+                           <div class="text-center"><a href="login.php"
                                  class="btn btn-success btn-block text-white btn-user">Already
                                  have an
                                  account?

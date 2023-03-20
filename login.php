@@ -1,3 +1,39 @@
+<?php
+
+$is_invalid = false;
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    
+    $mysqli = require __DIR__ . "\includes\config.php";
+    
+    $sql = sprintf("SELECT * FROM users
+                    WHERE stat = 1 AND email = '%s'",
+                   $mysqli->real_escape_string($_POST["email"]));
+    
+    $result = $mysqli->query($sql);
+    
+    $user = $result->fetch_assoc();
+    
+    if ($user) {
+        
+        if (password_verify($_POST["password"], $user["password_hash"])) {
+            
+            session_start();
+            
+            session_regenerate_id();
+            
+            $_SESSION["user_id"] = $user["id"];
+            
+            header("Location: home-page-1.php");
+            exit;
+        }
+    }
+    
+    $is_invalid = true;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +43,7 @@
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-   <title>Login</title>
+   <title>Seanchas - Login</title>
 
    <!-- Font Awesome icons (free version)-->
    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
@@ -68,7 +104,7 @@
 
 </head>
 
-<body style="background-image: url('assets/img/loginba.jpg');">
+<body style="background-image: url('assets/img/bg-01.jpeg');">
    <div class="container">
       <div class="row justify-content-center">
          <div class="col-xl-6 col-lg-8 col-md-8">
@@ -80,11 +116,14 @@
                            <div class="text-center">
                               <h1 class="h4 text-gray-900 mb-3">StoryTeller Login</h1>
                            </div>
+                           <?php if ($is_invalid): ?>
+                              <em>Invalid login</em>
+                           <?php endif; ?>
                            <form class="user" method="post" id="userform" name="storytellerlogin"
                               onsubmit="return validate();" novalidate>
                               <div class="form-group">
                                  <input type="email" class="form-control form-control-user" id="email" name="email"
-                                    autocomplete="off" placeholder="Enter Email Address...">
+                                    autocomplete="off" placeholder="Enter Email Address..." value="<?= htmlspecialchars($_POST["email"] ?? "") ?>">
                                  <span id="message-email" style="color: red; font-size: small;"></span>
                               </div>
                               <div class="form-group">
@@ -105,16 +144,16 @@
                               <hr>
                            </form>
                            <div class="text-center">
-                              <a href="index.html" class="btn btn-primary btn-block text-white btn-user">Home</a>
+                              <a href="index.php" class="btn btn-primary btn-block text-white btn-user">Home</a>
                            </div>
                            <hr>
                            <div class="text-center">
-                              <a href="view-stories.html" class="btn btn-info btn-block text-white btn-user">View
+                              <a href="view-stories.php" class="btn btn-info btn-block text-white btn-user">View
                                  Stories</a>
                            </div>
                            <hr>
                            <div class="text-center">
-                              <a href="register.html" class="btn btn-danger btn-block text-white btn-user">Don't
+                              <a href="register.php" class="btn btn-danger btn-block text-white btn-user">Don't
                                  have
                                  an
                                  account?

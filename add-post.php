@@ -1,3 +1,19 @@
+<?php
+
+session_start();
+if (isset($_SESSION["user_id"])) {
+    
+   $mysqli = require __DIR__ . "\includes\config.php";
+   
+   $sql = "SELECT * FROM users
+           WHERE id = {$_SESSION["user_id"]}";
+           
+   $result = $mysqli->query($sql);
+   
+   $user = $result->fetch_assoc();
+}
+?>
+<?php if (isset($user)){ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +21,7 @@
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-   <title>Add Story</title>
+   <title>Seanchas - Add Story</title>
 
 
    <!-- Vendor CSS Files -->
@@ -38,54 +54,35 @@
 
    <!-- Drag and Drop CSS -->
    <link rel="stylesheet" href="assets/css/drag.css">
+
+   <script type="text/javascript">
+
+      function validate() {
+         let title = document.getElementById('title').value;
+         let select1 = document.getElementById('select1').value;
+         let select2 = document.getElementById('select2').value;
+         let file = document.getElementById("file1").value;
+         let desc = document.getElementById("desc").value;
+         let username = document.getElementById("username").value;
+         if (title !== "" && select1 !== "" && select2 !== "" && file !== "" && desc !== "" && username !== "") {
+         alert("Post submitted successfully, please wait for Admin's approval!");
+         return true;
+         } else {
+         document.getElementById('submit').disabled = true;
+         return false;
+         }
+         
+      }
+   </script>
+
 </head>
 
 <body>
    <!-- Navigation-->
-   <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-      <div class="container px-4 px-lg-5">
-         <a class="navbar-brand" href="index.html">SEANCHAS</a>
-         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
-            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            Menu
-            <i class="fas fa-bars"></i>
-         </button>
-         <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto py-4 py-lg-0">
-               <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">Home</a></li>
-               <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="view-stories.html">view-stories</a>
-               </li>
-               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle px-lg-3 py-3 py-lg-4" href="#" role="button"
-                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     My Stories
-                  </a>
-                  <!-- Here's the magic. Add the .animate and .slideIn classes to your .dropdown-menu and you're all set! -->
-                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                     <a class="dropdown-item" href="add-post.html">Add Stories</a>
-                     <a class="dropdown-item" href="manage-post.html">Manage Stories</a>
-                  </div>
-               </li>
-               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle px-lg-3 py-3 py-lg-4" href="#" role="button"
-                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     Profile
-                  </a>
-                  <!-- Here's the magic. Add the .animate and .slideIn classes to your .dropdown-menu and you're all set! -->
-                  <div class="dropdown-menu dropdown-menu-end animate slideIn" aria-labelledby="navbarDropdown">
-                     <div class="dropdown-divider"></div>
-                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Log out</a>
-                     <div class="dropdown-divider"></div>
-                  </div>
-               </li>
-            </ul>
-         </div>
-      </div>
-   </nav>
+   <?php include 'includes/header.php'; ?>
 
    <!-- Page Header-->
-   <header class="masthead" style="background-image: url('assets/img/addpost.jpg')">
+   <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
       <div class="container position-relative px-4 px-lg-5">
          <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-12 col-lg-12 col-xl-12" style="min-height: 5px; height: 8px;">
@@ -100,7 +97,7 @@
    <div class="container">
       <div class="row">
          <div class="col-md-10 col-lg-8 mx-auto">
-            <form id="contactForm" method="post" enctype="multipart/form-data">
+            <form action="add-post-process.php" id="contactForm" method="post" enctype="multipart/form-data" name="add_post" onsubmit="return validate();">
                <div class="control-group">
                   <div class="form-group floating-label-form-group controls">
                      <label class="form-text" for="title"><strong>Title</strong></label>
@@ -110,7 +107,7 @@
                <div class="control-group">
                   <div class="form-group floating-label-form-group controls">
                      <label class="form-text" for="select1"><strong>Select Category</strong></label>
-                     <select class="form-control" id="select1" name="selectcat" required>
+                     <select class="form-control" id="select1" name="select1" required>
                         <option value="">-- Select --</option>
                         <option value="Place"> Place </option>
                         <option value="Object"> Object </option>
@@ -121,7 +118,7 @@
                   <div class="form-group floating-label-form-group controls">
                      <label class="form-text" for="select1"><strong>Select Location</strong></label>
                      <!-- https://www.mycomputertips.co.uk/127 -->
-                     <select class="form-control" id="select1" name="selectcat" required>
+                     <select class="form-control" id="select2" name="select2" required>
                         <option value="">-- Scotland --</option>
                         <option value="Aberdeen City">Aberdeen City</option>
                         <option value="Aberdeenshire">Aberdeenshire</option>
@@ -163,14 +160,13 @@
                   <div class="form-group floating-label-form-group controls">
                      <!-- https://www.tutorialspoint.com/php-files#:~:text=%24_FILES%5B'file'%5D%5B'tmp_name'%5D,was%20stored%20on%20the%20server. -->
                      <label class="form-text" for="file1"><strong>Add an image</strong></label>
-                     <!-- <input type="file" class="form-control-file" id="file1" name="file"> -->
                      <!-- https://bbbootstrap.com/snippets/drag-and-drop-files-preview-area-85841530# -->
                      <div class="drag-image">
                         <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
                         <h6>Drag & Drop File Here</h6>
                         <span>OR</span>
-                        <button>Browse File</button>
-                        <input type="file" class="form-control-file" id="file1" name="file" hidden>
+                        <!-- <button id="btn">Browse File</button> -->
+                        <input type="file" class="form-control-file" id="file1" name="file1">
                      </div>
                   </div>
                </div>
@@ -178,14 +174,20 @@
                <div class="control-group">
                   <div class="form-group floating-label-form-group controls">
                      <label class="form-text" for="desc"><strong>Description</strong></label>
-                     <textarea class="form-control" id="desc" required rows="5" name="description"></textarea>
+                     <textarea class="form-control" id="desc" required rows="5" name="desc"></textarea>
                   </div>
                </div>
-
+               <?php 
+                  $user_id = $_SESSION['user_id'];
+                  $sql = sprintf("SELECT * FROM users WHERE id = '%s'",$user_id);
+                  $stmt = $mysqli->query($sql);
+                  $users = $stmt->fetch_assoc();
+                  $full_name = htmlentities($user["f_name"] . " " . $user["l_name"]);
+                   ?>
                <div class="control-group">
                   <div class="form-group floating-label-form-group controls">
                      <label class="form-text" for="name"><strong>Autor</strong></label>
-                     <input class="form-control" type="text" id="name" disabled name="name" value="Username">
+                     <input class="form-control" type="text" id="username" disabled name="username" value="<?php echo htmlentities($full_name); ?>">
                   </div>
                </div>
 
@@ -213,75 +215,15 @@
                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                <div class="modal-footer">
                   <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                  <a class="btn btn-primary" href="login.html">Logout</a>
+                  <a class="btn btn-primary" href="logout.php">Logout</a>
                </div>
             </div>
          </div>
       </div>
    </div>
    <!-- ======= Footer ======= -->
-   <footer id="footer">
-
-      <div class="footer-top">
-         <div class="container">
-            <div class="row">
-
-               <div class="col-lg-4 col-md-6 footer-contact">
-                  <h3>Seanchas</h3>
-                  <p>
-                     A108 Adam Street <br>
-                     New York, NY 535022<br>
-                     United States <br><br>
-                     <strong>Phone:</strong> +1 5589 55488 55<br>
-                     <strong>Email:</strong> info@example.com<br>
-                  </p>
-               </div>
-
-               <div class="col-lg-3 col-md-6 footer-links">
-                  <h4>Useful Links</h4>
-                  <ul>
-                     <li><i class="bx bx-chevron-right"></i> <a href="index.html">Home</a></li>
-                     <li><i class="bx bx-chevron-right"></i> <a href="about.html">About us</a></li>
-                     <li><i class="bx bx-chevron-right"></i> <a href="view-stories.html">View stories</a></li>
-                     <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-                     <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-                  </ul>
-               </div>
-               <div class="col-lg-5 col-md-6 footer-newsletter">
-                  <h4>Join Our Newsletter</h4>
-                  <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-                  <form action="" method="post">
-                     <input type="email" name="email"><input type="submit" value="Subscribe">
-                  </form>
-               </div>
-
-            </div>
-         </div>
-      </div>
-
-      <div class="container d-md-flex py-4">
-
-         <div class="me-md-auto text-center text-md-start">
-            <div class="copyright">
-               &copy; Copyright <strong><span>Lumia</span></strong>. All Rights Reserved
-            </div>
-            <div class="credits">
-               <!-- All the links in the footer should remain intact. -->
-               <!-- You can delete the links only if you purchased the pro version. -->
-               <!-- Licensing information: https://bootstrapmade.com/license/ -->
-               <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/lumia-bootstrap-business-template/ -->
-               Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
-         </div>
-         <div class="social-links text-center text-md-right pt-3 pt-md-0">
-            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-         </div>
-      </div>
-   </footer><!-- End Footer -->
+   <?php include 'includes/footer.php'; ?>
+   <!-- End Footer -->
 
    <script src="assets/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
    <br>
@@ -309,12 +251,12 @@
    <script type="text/javascript">
       const dropArea = document.querySelector(".drag-image"),
          dragText = dropArea.querySelector("h6"),
-         button = dropArea.querySelector("button"),
-         input = dropArea.querySelector("input");
+         but = dropArea.querySelector("#sendMessageButton"),
+         inp = dropArea.querySelector("#file1");
       let file;
 
-      button.onclick = () => {
-         input.click();
+      but.onclick = () => {
+         inp.click();
       }
 
       input.addEventListener("change", function () {
@@ -364,3 +306,4 @@
 </body>
 
 </html>
+<?php }else{header('location: login.php');  }?>

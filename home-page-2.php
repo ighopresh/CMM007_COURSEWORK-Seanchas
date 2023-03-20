@@ -1,42 +1,18 @@
 <?php
 
 session_start();
-$mysqli = require __DIR__ . "\includes\config.php"; 
-error_reporting(0);
-//https://www.geeksforgeeks.org/how-to-get-visitors-country-from-their-ip-in-php/
-// PHP code to extract IP 
-  
-function getVisIpAddr() {
-      
-   if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-       return $_SERVER['HTTP_CLIENT_IP'];
-   }
-   else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-       return $_SERVER['HTTP_X_FORWARDED_FOR'];
-   }
-   else {
-       return $_SERVER['REMOTE_ADDR'];
-   }
+
+if (isset($_SESSION["user_id"])) {
+    
+    $mysqli = require __DIR__ . "\includes\config.php";
+    
+    $sql = "SELECT * FROM users
+            WHERE id = {$_SESSION["user_id"]}";
+            
+    $result = $mysqli->query($sql);
+    
+    $user = $result->fetch_assoc();
 }
- 
-// Store the IP address
-$vis_ip = getVisIPAddr();
- 
-// Display the IP address
-//echo $vis_ip;
-// PHP code to obtain country, city, 
-// continent, etc using IP Address
-  
-$ip = $vis_ip;
-  
-// Use JSON encoded string and converts
-// it into a PHP variable
-$ipdat = @json_decode(file_get_contents(
-    "http://www.geoplugin.net/json.gp?ip=" . $ip));
-
-$country = $ipdat->geoplugin_city;
-$city = $ipdat->geoplugin_city;
-
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +22,7 @@ $city = $ipdat->geoplugin_city;
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Home - Taleseekers</title>
+   <title>Home</title>
    <!-- Font Awesome icons (free version)-->
    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
    <!-- Google fonts-->
@@ -85,7 +61,7 @@ $city = $ipdat->geoplugin_city;
    <?php include 'includes/header2.php'; ?>
 
    <!-- Page Header-->
-   <header class="masthead" style="background-image: url('assets/img/hero-bg.jpg')">
+   <header class="masthead" style="background-image: url('assets/img/hpage1.jpg')">
       <div class="container position-relative px-4 px-lg-5">
          <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
@@ -102,44 +78,100 @@ $city = $ipdat->geoplugin_city;
    <!-- Main Content-->
    <div class="container">
       <div class="row">
-      <?php 
-               // Stories in sequence in relation to there proximity
-               if ($country == 'Scotland'){
-                  $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1 AND stories.loc=$city";
-               } else {
-               $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1";
-               }
-               $mysqli->real_query($sql);
-               $no = 1;
-               if ($mysqli->field_count) {
-                  $users = $mysqli->store_result();
-                  foreach ($users as $user) {
-                     $full_name = htmlentities($user["f_name"] . " " . $user["l_name"]);?>
-            <div class="card mb-3" style="max-height: 80%;">
-               <div class="row g-0">
-                  <div class="col-md-3">
-                     <a href="story-details.php?id=<?php echo htmlentities($user["id"]); ?>">
-                        <img src="assets/img/postimages/<?php echo htmlentities($user["img"]); ?>" alt="" class="img-fluid rounded-start"
-                           style="max-height:200px; margin-top: 10px;">
-                     </a>
-                  </div>
-                  <div class="col-md-9">
-                     <div class="card-body">
-                                  <a href="story-details.php?id=<?php echo htmlentities($user["id"]); ?>" style="text-decoration: none;">
-                           <h4 class="card-title"><?php echo htmlentities($user["title"]); ?></h4>
-                           <p class="card-text"><?php echo htmlentities($user["descript"]); ?></p>
-                        </a>
-                        <p class="card-text" style="padding-top: 2%;">
-                           <small class="text-muted">Posted by&nbsp;<?php echo htmlentities($full_name); ?></small>
+         <div class="card mb-3" style="max-height: 80%;">
+            <div class="row g-0">
+               <div class="col-md-3">
+                  <a href="">
+                     <img src="assets/img/hpic1.jpg" alt="" class="img-fluid rounded-start"
+                        style="max-height:200px; margin-top: 10px;">
+                  </a>
+               </div>
+               <div class="col-md-9">
+                  <div class="card-body">
+                     <a href="" style="text-decoration: none;">
+                        <h4 class="card-title">Card title 1</h4>
+                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos eaque
+                           explicabo necessitatibus in laudantium temporibus eum?
                         </p>
-                     </div>
+                     </a>
+                     <p class="card-text" style="padding-top: 2%;"><small class="text-muted">Posted by&nbsp;_username_
+                           on _creation_date_</small>
+                     </p>
                   </div>
                </div>
             </div>
-            <hr>
-            <?php $no = $no + 1;
-               }
-                  } ?> 
+         </div>
+         <hr>
+         <div class="card mb-3" style="max-height: 80%;">
+            <div class="row g-0">
+               <div class="col-md-3">
+                  <a href="">
+                     <img src="assets/img/hpic2.jpg" class="img-fluid rounded-start" alt="..."
+                        style="max-height:200px; margin-top: 10px;"></a>
+               </div>
+               <div class="col-md-9">
+                  <div class="card-body">
+                     <a href="" style="text-decoration: none;">
+                        <h4 class="card-title">Custom component with stretched link</h4>
+                        <p class="card-text">This is some placeholder content for the custom component. It is intended
+                           to mimic what some
+                           real-world content would look like.</p>
+                     </a>
+                     <p class="card-text" style="padding-top: 2%;"><small class="text-muted">Posted by&nbsp;_username_
+                           on _creation_date_</small>
+                     </p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <hr>
+         <div class="card mb-3" style="max-height: 80%;">
+            <div class="row g-0">
+               <div class="col-md-3">
+                  <a href="">
+                     <img src="assets/img/hpic3.jpg" class="img-fluid rounded-start" alt="..."
+                        style="max-height:200px; margin-top: 10px;">
+                  </a>
+               </div>
+               <div class="col-md-9">
+                  <div class="card-body">
+                     <a href="" style="text-decoration: none;">
+                        <h4 class="card-title">Card title 3</h4>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                           additional content. This content is a little bit longer.
+                        </p>
+                     </a>
+                     <p class="card-text" style="padding-top: 2%;"><small class="text-muted">Posted by&nbsp;_username_
+                           on _creation_date_</small>
+                     </p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <hr>
+         <div class="card mb-3" style="max-height: 80%;">
+            <div class="row g-0">
+               <div class="col-md-3">
+                  <a href="">
+                     <img src="assets/img/hpic4.jpg" class="img-fluid rounded-start" alt="..."
+                        style="max-height:200px; margin-top: 10px;"></a>
+               </div>
+               <div class="col-md-9">
+                  <div class="card-body">
+                     <a href="" style="text-decoration: none;">
+                        <h4 class="card-title">Custom component with stretched link</h4>
+                        <p class="card-text">This is some placeholder content for the custom component. It is intended
+                           to mimic what some
+                           real-world content would look like.</p>
+                     </a>
+                     <p class="card-text" style="padding-top: 2%;"><small class="text-muted">Posted by&nbsp;_username_
+                           on _creation_date_</small>
+                     </p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <hr>
       </div>
    </div>
    <hr>

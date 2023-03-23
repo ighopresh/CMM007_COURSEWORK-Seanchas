@@ -51,7 +51,7 @@ $_SESSION['redirectURL'] = $_SERVER['REQUEST_URI'];
       <h1>Welcome to <span>SEANCHAS</span></h1>
       <h2>A storytelling online application for tourists visiting Scotland.</h2>
       <div class="flex-row justify-content-center align-items-center">
-        <a href="home-page-1.php" class="btn-get-started scrollto">Story Tellers</a>
+        <a href="home-page-1.php" class="btn-get-started scrollto">Story Teller</a>
         <a href="home-page-2.php" class="btn-get-started scrollto">Tale Seekers</a>
       </div>
     </div>

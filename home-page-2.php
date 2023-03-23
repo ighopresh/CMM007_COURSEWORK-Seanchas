@@ -34,7 +34,7 @@ $ip = $vis_ip;
 $ipdat = @json_decode(file_get_contents(
     "http://www.geoplugin.net/json.gp?ip=" . $ip));
 
-$country = $ipdat->geoplugin_city;
+$country = $ipdat->geoplugin_countryName;
 $city = $ipdat->geoplugin_city;
 
 ?>
@@ -91,8 +91,8 @@ $city = $ipdat->geoplugin_city;
             <div class="col-md-10 col-lg-8 col-xl-7">
                <div class="site-heading">
                   <h2>Welcome to Seanchas</h2>
-                  <h3>A Storytelling App</h3>
-                  <span class="subheading">Tourists travelling around Scotland can publish and read stories about their
+                  <h3>Tale seekers</h3>
+                  <span class="subheading">Tourists travelling around Scotland can read stories about other people's travels
                      travels.</span>
                </div>
             </div>
@@ -102,44 +102,54 @@ $city = $ipdat->geoplugin_city;
    <!-- Main Content-->
    <div class="container">
       <div class="row">
-      <?php 
-               // Stories in sequence in relation to there proximity
-               if ($country == 'Scotland'){
-                  $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1 AND stories.loc=$city";
-               } else {
-               $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1";
+         <?php 
+            //Function to truncate the description by first 20 words
+            //https://stackoverflow.com/questions/965235/how-can-i-truncate-a-string-to-the-first-20-words-in-php
+            function limit_text($text, $limit) {
+               if (str_word_count($text, 0) > $limit) {
+                  $words = str_word_count($text, 2);
+                  $pos = array_keys($words);
+                  $text = substr($text, 0, $pos[$limit]) ."...Read More";
                }
-               $mysqli->real_query($sql);
-               $no = 1;
-               if ($mysqli->field_count) {
-                  $users = $mysqli->store_result();
-                  foreach ($users as $user) {
-                     $full_name = htmlentities($user["f_name"] . " " . $user["l_name"]);?>
-            <div class="card mb-3" style="max-height: 80%;">
-               <div class="row g-0">
-                  <div class="col-md-3">
-                     <a href="story-details.php?id=<?php echo htmlentities($user["id"]); ?>">
-                        <img src="assets/img/postimages/<?php echo htmlentities($user["img"]); ?>" alt="" class="img-fluid rounded-start"
-                           style="max-height:200px; margin-top: 10px;">
+               return $text;
+            }
+            // Stories in sequence in relation to there proximity
+            if ($country == 'Scotland'){
+               $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1 AND stories.loc=$city";
+            } else {
+            $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1";
+            }
+            $mysqli->real_query($sql);
+            $no = 1;
+            if ($mysqli->field_count) {
+               $users = $mysqli->store_result();
+               foreach ($users as $user) {
+                  $full_name = htmlentities($user["f_name"] . " " . $user["l_name"]);?>
+         <div class="card mb-3" style="max-height: 80%;">
+            <div class="row g-0">
+               <div class="col-md-3">
+                  <a href="story-details.php?id=<?php echo htmlentities($user["id"]); ?>">
+                     <img src="assets/img/postimages/<?php echo htmlentities($user["img"]); ?>" alt="" class="img-fluid rounded-start"
+                        style="max-height:200px; margin-top: 10px;">
+                  </a>
+               </div>
+               <div class="col-md-9">
+                  <div class="card-body">
+                                 <a href="story-details.php?id=<?php echo htmlentities($user["id"]); ?>" style="text-decoration: none;">
+                        <h4 class="card-title"><?php echo htmlentities($user["title"]); ?></h4>
+                        <p class="card-text"><?php echo htmlentities(limit_text($user["descript"], 20)); ?></p>
                      </a>
-                  </div>
-                  <div class="col-md-9">
-                     <div class="card-body">
-                                  <a href="story-details.php?id=<?php echo htmlentities($user["id"]); ?>" style="text-decoration: none;">
-                           <h4 class="card-title"><?php echo htmlentities($user["title"]); ?></h4>
-                           <p class="card-text"><?php echo htmlentities($user["descript"]); ?></p>
-                        </a>
-                        <p class="card-text" style="padding-top: 2%;">
-                           <small class="text-muted">Posted by&nbsp;<?php echo htmlentities($full_name); ?></small>
-                        </p>
-                     </div>
+                     <p class="card-text" style="padding-top: 2%;">
+                        <small class="text-muted">Posted by&nbsp;<?php echo htmlentities($full_name); ?></small>
+                     </p>
                   </div>
                </div>
             </div>
-            <hr>
-            <?php $no = $no + 1;
-               }
-                  } ?> 
+         </div>
+         <hr>
+         <?php $no = $no + 1;
+            }
+               } ?> 
       </div>
    </div>
    <hr>

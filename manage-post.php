@@ -9,6 +9,17 @@ if (isset($_REQUEST['del'])) {
     $stmt = $mysqli->query($sql);
     echo "<script>alert('Story DELETED successfully!');document.location = 'pending-storytellers.php';</script>";
 }
+if (isset($_SESSION["user_id"])) {
+    
+   $mysqli = require __DIR__ . "\includes\config.php";
+   
+   $sql = "SELECT * FROM users
+           WHERE id = {$_SESSION["user_id"]}";
+           
+   $result = $mysqli->query($sql);
+   
+   $user = $result->fetch_assoc();
+}
 ?>
 <?php if (isset($user)){ ?>
 <!DOCTYPE html>
@@ -91,7 +102,9 @@ if (isset($_REQUEST['del'])) {
                         </thead>
                         <tbody>
                            <!-- select Individual Active Stories from Seanchas database -->
-                           <?php $sql = "SELECT stories.* FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1";
+                           <?php 
+                              $user_id = $_SESSION['user_id'];
+                              $sql = "SELECT stories.* FROM stories JOIN users ON users.id = stories.user_id WHERE stories.stat=1 AND users.id = $user_id";
                               $mysqli->real_query($sql);
                               $no = 1;
                               if ($mysqli->field_count) {

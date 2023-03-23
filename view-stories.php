@@ -44,7 +44,7 @@ $ipdat = @json_decode(file_get_contents(
 // echo 'Currency Code: ' . $ipdat->geoplugin_currencyCode . "\n";
 // echo 'Timezone: ' . $ipdat->geoplugin_timezone;
 
-$country = $ipdat->geoplugin_city;
+$country = $ipdat->geoplugin_countryName;
 $city = $ipdat->geoplugin_city;
 
 ?>
@@ -139,6 +139,16 @@ $city = $ipdat->geoplugin_city;
             </div>
             <!-- select Active Stories from Seanchas database -->
             <?php 
+               //Function to truncate the description by first 20 words
+               //https://stackoverflow.com/questions/965235/how-can-i-truncate-a-string-to-the-first-20-words-in-php
+               function limit_text($text, $limit) {
+                  if (str_word_count($text, 0) > $limit) {
+                     $words = str_word_count($text, 2);
+                     $pos = array_keys($words);
+                     $text = substr($text, 0, $pos[$limit]) ."...Read More";
+                  }
+                  return $text;
+               }
                // Stories in sequence in relation to user's proximity
                if ($country == 'Scotland'){
                   $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1 AND stories.loc=$city";
@@ -163,7 +173,7 @@ $city = $ipdat->geoplugin_city;
                      <div class="card-body">
                                   <a href="story-details.php?id=<?php echo htmlentities($user["id"]); ?>" style="text-decoration: none;">
                            <h4 class="card-title"><?php echo htmlentities($user["title"]); ?></h4>
-                           <p class="card-text"><?php echo htmlentities($user["descript"]); ?></p>
+                           <p class="card-text"><?php echo htmlentities(limit_text($user["descript"], 20)); ?></p>
                         </a>
                         <p class="card-text" style="padding-top: 2%;">
                            <small class="text-muted">Posted by&nbsp;<?php echo htmlentities($full_name); ?></small>

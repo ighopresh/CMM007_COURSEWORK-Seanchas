@@ -15,7 +15,6 @@ if (isset($_POST['submit'])) {
 }
 
 ?>
-<?php if (isset($user)){ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -315,4 +314,3 @@ if (isset($_POST['submit'])) {
 </body>
 
 </html>
-<?php }else{header('location: login.php');  }?>

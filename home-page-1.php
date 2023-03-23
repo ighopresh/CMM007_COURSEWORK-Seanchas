@@ -34,9 +34,19 @@ $ip = $vis_ip;
 $ipdat = @json_decode(file_get_contents(
     "http://www.geoplugin.net/json.gp?ip=" . $ip));
 
-$country = $ipdat->geoplugin_city;
+$country = $ipdat->geoplugin_countryName;
 $city = $ipdat->geoplugin_city;
-
+if (isset($_SESSION["user_id"])) {
+    
+   $mysqli = require __DIR__ . "\includes\config.php";
+   
+   $sql = "SELECT * FROM users
+           WHERE id = {$_SESSION["user_id"]}";
+           
+   $result = $mysqli->query($sql);
+   
+   $user = $result->fetch_assoc();
+}
 ?>
 <?php if (isset($user)){ ?>
 <!DOCTYPE html>
@@ -85,14 +95,14 @@ $city = $ipdat->geoplugin_city;
    <?php include 'includes/header.php'; ?>
 
    <!-- Page Header-->
-   <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
+   <header class="masthead" style="background-image: url('assets/img/hpage1.jpg')">
       <div class="container position-relative px-4 px-lg-5">
          <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                <div class="site-heading">
                   <h1 style="margin-bottom: 25px;">Seanchas</h1>
-                  <h2 style="margin-bottom: 15px;">A Storytelling App</h2>
-                  <span class="subheading">Tourists travelling around Scotland can publish and read stories about their
+                  <h2 style="margin-bottom: 15px;">Storytellers</h2>
+                  <span class="subheading">Tourists travelling around Scotland can publish stories about their
                      travels.</span>
                </div>
             </div>
@@ -104,18 +114,28 @@ $city = $ipdat->geoplugin_city;
       <div class="row">
          <!-- select Active Stories from Seanchas database -->
          <?php 
-               // Stories in sequence in relation to there proximity
-               if ($country == 'Scotland'){
-                  $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1 AND stories.loc=$city";
-               } else {
-               $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1";
+            //Function to truncate the description by first 20 words
+            //https://stackoverflow.com/questions/965235/how-can-i-truncate-a-string-to-the-first-20-words-in-php
+            function limit_text($text, $limit) {
+               if (str_word_count($text, 0) > $limit) {
+                  $words = str_word_count($text, 2);
+                  $pos = array_keys($words);
+                  $text = substr($text, 0, $pos[$limit]) ."...Read More";
                }
-               $mysqli->real_query($sql);
-               $no = 1;
-               if ($mysqli->field_count) {
-                  $users = $mysqli->store_result();
-                  foreach ($users as $user) {
-                     $full_name = htmlentities($user["f_name"] . " " . $user["l_name"]);?>
+               return $text;
+            }
+            // Stories in sequence in relation to there proximity
+            if ($country == 'Scotland'){
+               $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1 AND stories.loc=$city";
+            } else {
+            $sql = $sql = "SELECT stories.*, users.f_name, users.l_name FROM stories JOIN users WHERE users.id = stories.user_id AND stories.stat=1";
+            }
+            $mysqli->real_query($sql);
+            $no = 1;
+            if ($mysqli->field_count) {
+               $users = $mysqli->store_result();
+               foreach ($users as $user) {
+                  $full_name = htmlentities($user["f_name"] . " " . $user["l_name"]);?>
             <div class="card mb-3" style="max-height: 80%;">
                <div class="row g-0">
                   <div class="col-md-3">
@@ -128,7 +148,7 @@ $city = $ipdat->geoplugin_city;
                      <div class="card-body">
                                   <a href="story-details.php?id=<?php echo htmlentities($user["id"]); ?>" style="text-decoration: none;">
                            <h4 class="card-title"><?php echo htmlentities($user["title"]); ?></h4>
-                           <p class="card-text"><?php echo htmlentities($user["descript"]); ?></p>
+                           <p class="card-text"><?php echo htmlentities(limit_text($user["descript"], 20)); ?></p>
                         </a>
                         <p class="card-text" style="padding-top: 2%;">
                            <small class="text-muted">Posted by&nbsp;<?php echo htmlentities($full_name); ?></small>

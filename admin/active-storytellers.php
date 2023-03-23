@@ -1,3 +1,23 @@
+<?php
+
+session_start();
+
+$mysqli = require __DIR__ . "\includes\database.php";
+
+
+
+# on submit for user deletion
+if (isset($_REQUEST['del'])) {
+    $delid = intval($_GET['del']);
+    $sql = sprintf("DELETE FROM users WHERE id='%s'", $delid);
+    $stmt = $mysqli->query($sql);
+    echo "<script>alert('User deleted');document.location = 'active-storytellers.php';</script>";
+}
+
+?>
+<?php include 'includes/cookie.php'; ?>
+<?php if (isset($user)){ ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,72 +51,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">SB Panel</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Interface
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>App Management</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Admin Page:</h6>
-                        <a class="collapse-item" href="add-post.html"><i
-                                class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>Add Stories</a>
-                        <a class="collapse-item" href="manage-post.html"><i
-                                class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>Manage Stories</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">User Management:</h6>
-                        <a class="collapse-item active" href="active-storytellers.html"><i
-                                class="fas fa-calendar fa-sm fa-fw mr-2 text-gray-400"></i>Active StoryTellers</a>
-                        <a class="collapse-item" href="pending-storytellers.html"><i
-                                class="fas fa-book fa-sm fa-fw mr-2 text-gray-400"></i>Pending StoryTellers</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Story Management:</h6>
-                        <a class="collapse-item" href="active-stories.html"><i
-                                class="fas fa-clipboard-list fa-sm fa-fw mr-2 text-gray-400"></i>Active Stories</a>
-                        <a class="collapse-item" href="pending-stories.html"><i
-                                class="fas fa-comments fa-sm fa-fw mr-2 text-gray-400"></i>Pending Stories</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Sign Out:</h6>
-                        <a class="collapse-item" href="#" data-toggle="modal" data-target="#logoutModal"><i
-                                class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Logout</a>
-                    </div>
-                </div>
-            </li>
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-        </ul>
+        <?php include 'includes/sidebar.php'; ?>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -155,118 +110,10 @@
                         </li>
 
                         <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">3+</span>
-                            </a>
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 2, 2019</div>
-                                        Spending Alert: We've noticed unusually high spending for your account.
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
+                        <?php include 'includes/template/alert.php'; ?>
 
                         <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                            </div>
-                        </li>
+                        <?php include 'includes/template/message.php'; ?>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -274,7 +121,15 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ighomon</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <?php 
+                                            $admin_id = $_SESSION['user_id'];
+                                            $sql = sprintf("SELECT * FROM u_admin WHERE id = '%s'",$admin_id);
+                                            $stmt = $mysqli->query($sql);
+                                            $users = $stmt->fetch_assoc();
+                                            $admin_name = htmlentities($users["username"]); 
+                                            echo htmlentities($admin_name); ?>
+                                </span>
                                 <img class="img-profile rounded-circle" src="img/undraw_profile_1.svg">
                             </a>
                             <!-- Logout -->
@@ -330,7 +185,36 @@
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        <tr>
+                                        <!-- select Active users from Seanchas database -->
+                                        <?php $sql = "SELECT * FROM users WHERE stat=1";
+                                        $mysqli->real_query($sql);
+                                        $no = 1;
+                                        if ($mysqli->field_count) {
+                                            $users = $mysqli->store_result();
+                                            foreach ($users as $user) {
+                                                $full_name = htmlentities($user["f_name"] . " " . $user["l_name"]); ?>
+                                                <tr>
+                                                    <td><?php echo htmlentities($no); ?></td>
+                                                    <td><?php echo htmlentities($full_name); ?></td>
+                                                    <td><?php echo htmlentities($user["email"]); ?></td>
+                                                    <td><a href="pending-storytellers.php?del=<?php echo $user["id"]; ?>"
+                                                           onclick="return confirm('Do you want to delete the user?');"><svg style="color: red"
+                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                height="16" fill="currentColor" class="bi bi-trash"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+                                                    fill="red"></path>
+                                                <path fill-rule="evenodd"
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                                    fill="red"></path>
+                                            </svg></a>
+                                                    </td>
+                                                </tr>
+                                                <?php $no = $no + 1;
+                                            }
+                                        } ?>
+                                        <!-- <tr>
                                             <td>1</td>
                                             <td>Tiger Nixon</td>
                                             <td>tigernixon61@gmail.com</td>
@@ -569,7 +453,7 @@
                                                     d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
                                                     fill="red"></path>
                                             </svg></a></td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
@@ -586,13 +470,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
-                </div>
-            </footer>
+            <?php include 'includes/footer.php'; ?>
             <!-- End of Footer -->
 
         </div>
@@ -620,7 +498,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="login.php">Logout</a>
                 </div>
             </div>
         </div>
@@ -646,3 +524,4 @@
 </body>
 
 </html>
+<?php }else{header('location: login.php');  }?>

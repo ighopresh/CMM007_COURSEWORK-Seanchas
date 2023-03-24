@@ -101,7 +101,7 @@ if (isset($_SESSION["user_id"])) {
             <div class="col-md-10 col-lg-8 col-xl-7">
                <div class="site-heading">
                   <h1 style="margin-bottom: 25px;">Seanchas</h1>
-                  <h2 style="margin-bottom: 15px;">Storytellers</h2>
+                  <h2 style="margin-bottom: 15px;">Story Tellers</h2>
                   <span class="subheading">Tourists travelling around Scotland can publish stories about their
                      travels.</span>
                </div>

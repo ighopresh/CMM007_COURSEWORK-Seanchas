@@ -91,7 +91,7 @@ $city = $ipdat->geoplugin_city;
             <div class="col-md-10 col-lg-8 col-xl-7">
                <div class="site-heading">
                   <h2>Welcome to Seanchas</h2>
-                  <h3>Tale seekers</h3>
+                  <h3>Tale Seekers</h3>
                   <span class="subheading">Tourists travelling around Scotland can read stories about other people's travels
                      travels.</span>
                </div>

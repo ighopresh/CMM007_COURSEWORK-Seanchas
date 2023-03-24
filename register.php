@@ -253,7 +253,7 @@
 
 </head>
 
-<body style="background-image: url('assets/img/bg-00.jpeg');">
+<body style="background-image: url('assets/img/signup.jpg');">
    <div class="container">
       <div class="row justify-content-center">
          <div class="col-xl-6 col-lg-8 col-md-8">

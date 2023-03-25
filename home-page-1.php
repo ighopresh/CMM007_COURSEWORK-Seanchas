@@ -96,13 +96,13 @@ if (isset($_SESSION["user_id"])) {
 
    <!-- Page Header-->
    <header class="masthead" style="background-image: url('assets/img/hpage1.jpg')">
-      <div class="container position-relative px-4 px-lg-5">
+   <div class="container position-relative px-4 px-lg-5">
          <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                <div class="site-heading">
                   <h1 style="margin-bottom: 25px;">Seanchas</h1>
-                  <h2 style="margin-bottom: 15px;">Story Tellers</h2>
-                  <span class="subheading">Tourists travelling around Scotland can publish stories about their
+                  <h2 style="margin-bottom: 15px;">A Storytelling App</h2>
+                  <span class="subheading">Tourists travelling around Scotland can publish and read stories about their
                      travels.</span>
                </div>
             </div>

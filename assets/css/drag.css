@@ -34,7 +34,7 @@
    margin: 10px 0 15px 0;
 }
 
-.drag-image button {
+.drag-image button, .drag-image input {
    padding: 10px 25px;
    font-size: 14px;
    font-weight: 300;

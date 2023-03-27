@@ -67,7 +67,7 @@ $mysqli = require __DIR__ . "\includes\database.php";
         <!-- End of Sidebar -->
         <?php
             $id = intval($_GET['id']);
-            $sql = "SELECT *, users.f_name, users.l_name, u_admin.id FROM ((stories JOIN users ON users.id=stories.user_id) JOIN u_admin ON u_admin.id=stories.user_id) WHERE stories.id=$id";
+            $sql = "SELECT *, users.f_name, users.l_name FROM stories JOIN users ON users.id=stories.user_id WHERE stories.id=$id";
             $mysqli->real_query($sql);
             if ($mysqli->field_count) {
                 $users = $mysqli->store_result();

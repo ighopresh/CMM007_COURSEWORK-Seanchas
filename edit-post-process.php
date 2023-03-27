@@ -46,7 +46,6 @@ if ( ! $stmt->prepare($sql)) {
 }
 
 
-
                   
 if ($stmt->execute()) {
 

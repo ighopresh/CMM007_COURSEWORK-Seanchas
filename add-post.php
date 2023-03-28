@@ -82,7 +82,7 @@ if (isset($_SESSION["user_id"])) {
    <?php include 'includes/header.php'; ?>
 
    <!-- Page Header-->
-   <header class="masthead" style="background-image: url('assets/img/addpost.jpg')">
+   <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
       <div class="container position-relative px-4 px-lg-5">
          <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-12 col-lg-12 col-xl-12" style="min-height: 5px; height: 8px;">

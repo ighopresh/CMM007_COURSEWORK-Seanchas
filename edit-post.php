@@ -90,7 +90,7 @@ if (isset($_POST['submit'])) {
             foreach ($users as $user) {
                 $full_name = htmlentities($user["f_name"] . " " . $user["l_name"]);?>
    <!-- Page Header-->
-   <header class="masthead" style="background-image: url('assets/img/edit.jpg')">
+   <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
       <div class="container position-relative px-4 px-lg-5">
          <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-12 col-lg-12 col-xl-12" style="min-height: 5px; height: 8px;">
